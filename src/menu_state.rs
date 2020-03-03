@@ -1,73 +1,51 @@
-// use crate::menu::*;
-// use crate::user_input::input;
+use crate::menu::main_menu;
+use crate::menu::Command;
+use crate::menu::Menu;
 
-// pub struct MenuState {
-//     menu: Menu,
-//     selected_option: String,
-//     callback: fn(),
-// }
+fn select_item(menu: Box<Menu>, item: &String) -> Command {
+    // get the index, if it exists, and set the command
+    if let Some(index) = menu
+        .options
+        .iter()
+        .position(|s| *s.to_lowercase() == item.to_lowercase())
+    {
+        menu.commands[index].to_owned()
+    } else {
+        Command::InputError
+    }
+}
 
-// impl MenuState {
-
-//     pub fn new() -> MenuState {
-//         MenuState {
-//         }
-//     }
-//     pub fn select_item(&mut self, item: String) {
-//         if let Some(index) = self.menu.options.iter().position(|s| *s == item) {
-//             let callback: fn() = self.menu.callbacks[index];
-//             self.selected_option = item;
-//             self.callback = callback;
-//         } else {
-//             println!("Error: {} is not a valid menu option.", item);
-//         };
-//     }
-
-//     pub fn begin_menu_cycle(&mut self) {
-//         self.menu = main_menu();
-//         self.menu.display_menu();
-//         let uinput = input();
-//         self.select_item(uinput);
-//         let callback = self.callback;
-//         callback();
-//     }
-// }
-
-// fn play_game() {
-
-// }
-
-// pub fn main_menu() -> Menu {
-
-//     let options = vec![String::from("Play"), String::from("Settings"), String::from("Quit")];
-//     let callbacks: Vec<fn()> = vec![play_game, settings, quit_game];
-
-//     Menu::new(String::from("Main Menu"), 44, options, callbacks, false)
-
-// }
-
-// fn play_menu() -> Menu {
-//     let options = vec![String::from("New Game"), String::from("Load Game")];
-//     let callbacks: Vec<fn()> = vec![new_game, load_game];
-//     Menu::new(String::from("Play Game"), 44, options, callbacks, true)
-// }
-
-// fn new_game() {
-
-// }
-
-// fn continue_game() {
-
-// }
-
-// fn load_game() {
-
-// }
-
-// fn quit_game() {
-//     println!("Quit");
-// }
-
-// fn settings() {
-//     println!("Options");
-// }
+pub fn menu_cycle() {
+    use crate::user_input::*;
+    let start = &main_menu();
+    let mut cmd = Command::Continue;
+    let mut cur_menu = start.clone();
+    let mut message = String::new();
+    let mut menu_stack = vec![];
+    let mut uinput = String::new();
+    while cmd != Command::Quit {
+        cur_menu.display_menu();
+        if cfg!(debug_assertions) {
+            println!(
+                "Command Acknowledged: '{}', Type: {}",
+                uinput,
+                cmd.to_string()
+            );
+        }
+        print!("{}", message);
+        message = String::new();
+        uinput = input();
+        cmd = select_item(Box::from(cur_menu.to_owned()), &uinput).to_owned();
+        flush_output();
+        match &cmd {
+            Command::RunFunc(call) => call(),
+            Command::SetMenu(menu) => {
+                menu_stack.push(cur_menu.clone());
+                cur_menu = menu.clone()
+            }
+            Command::InputError => message = format!("Unknown input: {}\n", uinput),
+            Command::Back => cur_menu = menu_stack.pop().unwrap().clone(),
+            _ => {}
+        }
+    }
+}
