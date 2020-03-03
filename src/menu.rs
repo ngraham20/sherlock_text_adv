@@ -1,5 +1,5 @@
 #[derive(Clone, std::cmp::PartialEq, Debug)]
-struct Menu {
+pub struct Menu {
     body: String,
     is_sub_menu: bool,
     pub options: Vec<String>,
@@ -67,50 +67,11 @@ impl Menu {
     }
 }
 
-fn select_item(menu: Box<Menu>, item: String) -> Command {
-    // get the index, if it exists, and set the command
-    if let Some(index) = menu
-        .options
-        .iter()
-        .position(|s| *s.to_lowercase() == item.to_lowercase())
-    {
-        menu.commands[index].to_owned()
-    } else {
-        Command::Continue
-    }
-}
+// -------------------------- PUBLIC FUNCTIONS --------------------------
 
 // -------------------------- PUBLIC FUNCTIONS --------------------------
 
-pub fn menu_cycle() {
-    use crate::user_input::*;
-    let start = &main_menu();
-    let mut cmd = Command::Continue;
-    let mut cur_menu = start.clone();
-    let mut menu_stack = vec![];
-    while cmd != Command::Quit {
-        cur_menu.display_menu();
-        let uinput = input();
-        cmd = select_item(Box::from(cur_menu.to_owned()), uinput).to_owned();
-        if cfg!(debug_assertions) {
-            println!("Command Acknowledged: {}", cmd.to_string());
-        }
-        flush_output();
-        match &cmd {
-            Command::RunFunc(call) => call(),
-            Command::SetMenu(menu) => {
-                menu_stack.push(cur_menu.clone());
-                cur_menu = menu.clone()
-            }
-            Command::Back => cur_menu = menu_stack.pop().unwrap().clone(),
-            _ => {}
-        }
-    }
-}
-
-// -------------------------- PUBLIC FUNCTIONS --------------------------
-
-fn main_menu() -> Menu {
+pub fn main_menu() -> Menu {
     let mut options = vec![
         String::from("Play"),
         String::from("Settings"),
@@ -147,11 +108,12 @@ fn settings_menu() -> Menu {
 fn play() {}
 
 #[derive(Clone, std::cmp::PartialEq, Debug)]
-enum Command {
+pub enum Command {
     SetMenu(Menu),
     RunFunc(fn()),
     Back,
     Continue,
+    InputError,
     Quit,
 }
 
@@ -162,6 +124,7 @@ impl Command {
             Command::RunFunc(_) => "RunFunc",
             Command::Back => "Back",
             Command::Continue => "Continue",
+            Command::InputError => "InputError",
             Command::Quit => "Quit",
         }
     }
