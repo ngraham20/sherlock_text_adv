@@ -15,7 +15,7 @@ fn select_item(menu: Box<Menu>, item: &String) -> menu::Command {
     }
 }
 
-pub fn begin_menu_cycle(width: usize) {
+pub fn menu_cycle(width: usize) -> menu::Command {
     use crate::user_input::*;
     let start = &main_menu(width);
     let mut cmd = menu::Command::Continue;
@@ -23,7 +23,7 @@ pub fn begin_menu_cycle(width: usize) {
     let mut message = String::new();
     let mut menu_stack = vec![];
     let mut uinput = String::new();
-    while cmd != menu::Command::Quit {
+    while cmd != menu::Command::Quit && cmd != menu::Command::Play {
         cur_menu.display_menu();
         if cfg!(debug_assertions) {
             println!(
@@ -48,4 +48,5 @@ pub fn begin_menu_cycle(width: usize) {
             _ => {}
         }
     }
+    cmd
 }

@@ -87,8 +87,8 @@ impl Room {
 
         let (disp_title, disp_desc) = match self.lighting {
             Lighting::BRIGHT => (self.title.to_owned(), self.description_lit.to_owned()),
-            Lighting::DIM => (format!("{} ({})", self.title, "Dimly Lit"), self.description_lit.to_owned()),
-            Lighting::DARK => (format!("{} ({})", self.title, "Unlit"), self.description_lit.to_owned()),
+            Lighting::DIM => (format!("{} ({})", self.title, "Dimly Lit"), self.description_dim.to_owned()),
+            Lighting::DARK => (format!("{} ({})", self.title, "Unlit"), self.description_dark.to_owned()),
         };
 
         let bar: String = vec!['-'; self.width].iter().collect::<String>() + &String::from("\n");

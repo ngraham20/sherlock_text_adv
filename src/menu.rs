@@ -50,6 +50,7 @@ impl Menu {
 pub enum Command {
     SetMenu(Menu),
     RunFunc(fn()),
+    Play,
     Back,
     Continue,
     InputError,
@@ -61,6 +62,7 @@ impl Command {
         match self {
             Command::SetMenu(_) => "SetMenu",
             Command::RunFunc(_) => "RunFunc",
+            Command::Play => "Play",
             Command::Back => "Back",
             Command::Continue => "Continue",
             Command::InputError => "InputError",
@@ -78,8 +80,8 @@ pub fn main_menu(width: usize) -> Menu {
         String::from("Quit"),
     ];
     let mut commands: Vec<Command> = vec![
-        Command::RunFunc(play),
-        Command::SetMenu(settings_menu()),
+        Command::Play,
+        Command::SetMenu(settings_menu(width)),
         Command::Quit,
     ];
 
@@ -94,13 +96,13 @@ pub fn main_menu(width: usize) -> Menu {
 
 // -------------------------- PUBLIC FUNCTIONS --------------------------
 
-fn settings_menu() -> Menu {
+fn settings_menu(width: usize) -> Menu {
     let mut options = vec![String::from("Sound"), String::from("Brightness")];
     let mut commands: Vec<Command> = vec![Command::RunFunc(|| {}), Command::RunFunc(|| {})];
 
     Menu::new(
         String::from("Settings"),
-        44,
+        width,
         &mut options,
         &mut commands,
         true,
