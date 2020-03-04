@@ -15,21 +15,9 @@ impl Menu {
         is_sub_menu: bool,
     ) -> Self {
         let bar: String = vec!['-'; width].iter().collect::<String>() + &String::from("\n");
-        let empty: String = String::from("|")
-            + &vec![' '; width - 2].iter().collect::<String>()
-            + &String::from("|")
-            + &String::from("\n");
-
-        let title_bar: String = vec![' '; ((width - title.len() + 1) / 2) as usize]
-            .iter()
-            .collect::<String>()
-            + &title
-            + &vec![' '; ((width - title.len() + 1) / 2) as usize]
-                .iter()
-                .collect::<String>()
-            + &String::from("\n");
-
-        let menu_bar: String = String::new() + &bar + &title_bar + &bar;
+        let empty: String = format!("|{:1$}|", " ", width - 2) + &String::from("\n");
+        let title_bar: String = format!("{:^1$}", title, width) + &String::from("\n");
+        let title_cluster: String = String::new() + &bar + &title_bar + &bar;
 
         if is_sub_menu {
             options.push(String::from("Back"));
@@ -38,21 +26,12 @@ impl Menu {
 
         let mut option_bars = String::new();
         for i in 0..options.len() {
-            let obar: String = String::from("|")
-                + &vec![' '; ((width - options[i].len() + 1) / 2) - 1 as usize]
-                    .iter()
-                    .collect::<String>()
-                + &options[i]
-                + &vec![' '; ((width - options[i].len()) / 2 - 1) as usize]
-                    .iter()
-                    .collect::<String>()
-                + &String::from("|\n");
-
+            let obar: String = format!("|{:^1$}|\n", options[i], width - 2);
             option_bars += &obar;
         }
 
         let full_menu =
-            String::new() + &menu_bar + &empty + &empty + &option_bars + &empty + &empty + &bar;
+            String::new() + &title_cluster + &empty + &empty + &option_bars + &empty + &empty + &bar;
 
         Menu {
             body: full_menu,
@@ -66,46 +45,6 @@ impl Menu {
         print!("{}", self.body);
     }
 }
-
-// -------------------------- PUBLIC FUNCTIONS --------------------------
-
-// -------------------------- PUBLIC FUNCTIONS --------------------------
-
-pub fn main_menu() -> Menu {
-    let mut options = vec![
-        String::from("Play"),
-        String::from("Settings"),
-        String::from("Quit"),
-    ];
-    let mut commands: Vec<Command> = vec![
-        Command::RunFunc(play),
-        Command::SetMenu(settings_menu()),
-        Command::Quit,
-    ];
-
-    Menu::new(
-        String::from("Main Menu"),
-        44,
-        &mut options,
-        &mut commands,
-        false,
-    )
-}
-
-fn settings_menu() -> Menu {
-    let mut options = vec![String::from("Sound"), String::from("Brightness")];
-    let mut commands: Vec<Command> = vec![Command::RunFunc(|| {}), Command::RunFunc(|| {})];
-
-    Menu::new(
-        String::from("Settings"),
-        44,
-        &mut options,
-        &mut commands,
-        true,
-    )
-}
-
-fn play() {}
 
 #[derive(Clone, std::cmp::PartialEq, Debug)]
 pub enum Command {
@@ -129,3 +68,43 @@ impl Command {
         }
     }
 }
+
+// -------------------------- PUBLIC FUNCTIONS --------------------------
+
+pub fn main_menu(width: usize) -> Menu {
+    let mut options = vec![
+        String::from("Play"),
+        String::from("Settings"),
+        String::from("Quit"),
+    ];
+    let mut commands: Vec<Command> = vec![
+        Command::RunFunc(play),
+        Command::SetMenu(settings_menu()),
+        Command::Quit,
+    ];
+
+    Menu::new(
+        String::from("Main Menu"),
+        width,
+        &mut options,
+        &mut commands,
+        false,
+    )
+}
+
+// -------------------------- PUBLIC FUNCTIONS --------------------------
+
+fn settings_menu() -> Menu {
+    let mut options = vec![String::from("Sound"), String::from("Brightness")];
+    let mut commands: Vec<Command> = vec![Command::RunFunc(|| {}), Command::RunFunc(|| {})];
+
+    Menu::new(
+        String::from("Settings"),
+        44,
+        &mut options,
+        &mut commands,
+        true,
+    )
+}
+
+fn play() {}
