@@ -1,9 +1,7 @@
-use crate::inventory::*;
-use crate::entity::*;
 extern crate textwrap;
 use textwrap::Wrapper;
 
-pub struct Doors {
+pub struct _Doors {
     pub north: bool,
     pub south: bool,
     pub east: bool,
@@ -12,15 +10,15 @@ pub struct Doors {
     pub down: bool,
 }
 
-impl Doors {
-    pub fn new(north: bool, south: bool, east: bool, west: bool, up: bool, down: bool) -> Self {
-        Doors {
-            north: north,
-            south: south,
-            east: east,
-            west: west,
-            up: up,
-            down: down,
+impl _Doors {
+    pub fn _new(north: bool, south: bool, east: bool, west: bool, up: bool, down: bool) -> Self {
+        _Doors {
+            north,
+            south,
+            east,
+            west,
+            up,
+            down,
         }
     }
 }
@@ -30,9 +28,6 @@ pub struct Room {
     description_lit: String,
     description_dark: String,
     description_dim: String,
-    doors: Doors,
-    //inventory: Inventory,
-    //occupants: Vec<Entity>,
     pub lighting: Lighting,
     width: usize,
 }
@@ -43,12 +38,9 @@ impl Room {
         description_lit: String,
         description_dark: String,
         description_dim: String,
-        doors: Doors, 
-        //inventory: Inventory,
-        //occupants: Vec<Entity>,
         lighting: Lighting,
-        width: usize) -> Self {
-
+        width: usize,
+    ) -> Self {
         let mut fdescription_lit: String = String::new();
         let wrapper = Wrapper::new(width - 4);
         let lines = wrapper.wrap(&description_lit);
@@ -71,30 +63,32 @@ impl Room {
         }
 
         Room {
-            title: title,
+            title,
             description_lit: fdescription_lit,
             description_dark: fdescription_dim,
             description_dim: fdescription_dark,
-            doors: doors,
-            //inventory: inventory,
-            //occupants: occupants,
-            lighting: lighting,
-            width: width,
+            lighting,
+            width,
         }
     }
 
     pub fn display(&self) {
-
         let (disp_title, disp_desc) = match self.lighting {
             Lighting::BRIGHT => (self.title.to_owned(), self.description_lit.to_owned()),
-            Lighting::DIM => (format!("{} ({})", self.title, "Dimly Lit"), self.description_dim.to_owned()),
-            Lighting::DARK => (format!("{} ({})", self.title, "Unlit"), self.description_dark.to_owned()),
+            Lighting::DIM => (
+                format!("{} ({})", self.title, "Dimly Lit"),
+                self.description_dim.to_owned(),
+            ),
+            Lighting::DARK => (
+                format!("{} ({})", self.title, "Unlit"),
+                self.description_dark.to_owned(),
+            ),
         };
 
-        let bar: String = vec!['-'; self.width].iter().collect::<String>() + &String::from("\n");
+        let dash_bar: String = vec!['-'; self.width].iter().collect::<String>() + &String::from("\n");
         //let empty: String = format!("|{:1$}|", " ", self.width - 2) + &String::from("\n");
         let title_bar: String = format!("{:^1$}", disp_title, self.width) + &String::from("\n");
-        let title_cluster: String = String::new() + &bar + &title_bar + &bar;
+        let title_cluster: String = String::new() + &dash_bar + &title_bar + &dash_bar;
 
         println!("{}{}", title_cluster, disp_desc);
     }

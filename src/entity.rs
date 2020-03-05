@@ -1,3 +1,1 @@
-pub struct Entity {
-    
-}
+pub struct _Entity {}

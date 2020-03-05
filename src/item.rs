@@ -1,4 +1,2 @@
 #[derive(PartialEq)]
-pub struct Item {
-
-}
+pub struct Item {}

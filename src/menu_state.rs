@@ -2,7 +2,7 @@ use crate::menu::main_menu;
 use crate::menu;
 use crate::menu::Menu;
 
-fn select_item(menu: Box<Menu>, item: &String) -> menu::Command {
+fn select_item(menu: Menu, item: &str) -> menu::Command {
     // get the index, if it exists, and set the command
     if let Some(index) = menu
         .options
@@ -15,27 +15,20 @@ fn select_item(menu: Box<Menu>, item: &String) -> menu::Command {
     }
 }
 
-pub fn menu_cycle(width: usize) -> menu::Command {
+pub fn begin(width: usize) -> menu::Command {
     use crate::user_input::*;
     let start = &main_menu(width);
     let mut cmd = menu::Command::Continue;
     let mut cur_menu = start.clone();
     let mut message = String::new();
     let mut menu_stack = vec![];
-    let mut uinput = String::new();
+    let mut uinput: String;
     while cmd != menu::Command::Quit && cmd != menu::Command::Play {
         cur_menu.display_menu();
-        if cfg!(debug_assertions) {
-            println!(
-                "[DEBUG]: Command Acknowledged: '{}', Type: {}",
-                uinput,
-                cmd.to_string()
-            );
-        }
         print!("{}", message);
         message = String::new();
         uinput = input();
-        cmd = select_item(Box::from(cur_menu.to_owned()), &uinput).to_owned();
+        cmd = select_item(cur_menu.to_owned(), &uinput).to_owned();
         flush_output();
         match &cmd {
             menu::Command::RunFunc(call) => call(),

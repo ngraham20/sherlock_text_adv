@@ -14,10 +14,10 @@ impl Menu {
         commands: &mut Vec<Command>,
         is_sub_menu: bool,
     ) -> Self {
-        let bar: String = vec!['-'; width].iter().collect::<String>() + &String::from("\n");
+        let dash_bar: String = vec!['-'; width].iter().collect::<String>() + &String::from("\n");
         let empty: String = format!("|{:1$}|", " ", width - 2) + &String::from("\n");
         let title_bar: String = format!("{:^1$}", title, width) + &String::from("\n");
-        let title_cluster: String = String::new() + &bar + &title_bar + &bar;
+        let title_cluster: String = String::new() + &dash_bar + &title_bar + &dash_bar;
 
         if is_sub_menu {
             options.push(String::from("Back"));
@@ -25,19 +25,25 @@ impl Menu {
         }
 
         let mut option_bars = String::new();
-        for i in 0..options.len() {
-            let obar: String = format!("|{:^1$}|\n", options[i], width - 2);
+        for i in options.iter() {
+            let obar: String = format!("|{:^1$}|\n", i, width - 2);
             option_bars += &obar;
         }
 
-        let full_menu =
-            String::new() + &title_cluster + &empty + &empty + &option_bars + &empty + &empty + &bar;
+        let full_menu = String::new()
+            + &title_cluster
+            + &empty
+            + &empty
+            + &option_bars
+            + &empty
+            + &empty
+            + &dash_bar;
 
         Menu {
             body: full_menu,
             options: options.to_vec(),
             commands: commands.to_vec(),
-            is_sub_menu: is_sub_menu,
+            is_sub_menu,
         }
     }
 
@@ -58,7 +64,7 @@ pub enum Command {
 }
 
 impl Command {
-    pub fn to_string(&self) -> &str {
+    pub fn _to_string(&self) -> &str {
         match self {
             Command::SetMenu(_) => "SetMenu",
             Command::RunFunc(_) => "RunFunc",
@@ -108,5 +114,3 @@ fn settings_menu(width: usize) -> Menu {
         true,
     )
 }
-
-fn play() {}
