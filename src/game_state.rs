@@ -36,7 +36,6 @@ pub enum GameSetting {
 pub fn begin(screen_width: usize) {
     let mut settings = GameSettings::from(screen_width);
     let mut cmd = menu::Command::Continue;
-    //let mut cur_menu = menu::main_menu(settings.screen_width);
     while cmd != menu::Command::Quit {
         cmd = menu_state::begin(&mut settings);
         match cmd {

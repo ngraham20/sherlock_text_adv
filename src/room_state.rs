@@ -16,3 +16,12 @@ pub fn begin(settings: &GameSettings) {
     r.lighting = Lighting::DARK;
     r.display();
 }
+
+enum Direction {
+    North,
+    South,
+    East,
+    West,
+    Up,
+    Down,
+}
