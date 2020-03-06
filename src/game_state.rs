@@ -19,7 +19,7 @@ impl GameSettings {
     pub fn modify_setting(&mut self, setting: GameSetting) {
         match setting {
             GameSetting::ScreenWidth => {
-                print!("What should the new screen width be?\n>>");
+                println!("What should the new screen width be?");
                 flush_output();
                 let size = input();
                 self.screen_width = size.parse().unwrap()

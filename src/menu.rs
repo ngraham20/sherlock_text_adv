@@ -81,41 +81,6 @@ impl Menu {
     }
 }
 
-// pub fn update_settings(menu: &Menu, settings: &GameSettings) -> Menu {
-//     let dash_bar: String = vec!['-'; settings.screen_width].iter().collect::<String>() + &String::from("\n");
-//         let empty: String = format!("|{:1$}|", " ", settings.screen_width - 2) + &String::from("\n");
-//         let title_bar: String = format!("{:^1$}", title, width) + &String::from("\n");
-//         let title_cluster: String = String::new() + &dash_bar + &title_bar + &dash_bar;
-
-//         if is_sub_menu {
-//             options.push(String::from("Back"));
-//             commands.push(Command::Back);
-//         }
-
-//         let mut option_bars = String::new();
-//         for i in options.iter() {
-//             let obar: String = format!("|{:^1$}|\n", i, width - 2);
-//             option_bars += &obar;
-//         }
-
-//         let full_menu = String::new()
-//             + &title_cluster
-//             + &empty
-//             + &empty
-//             + &option_bars
-//             + &empty
-//             + &empty
-//             + &dash_bar;
-
-//         Menu {
-//             title: title,
-//             body: full_menu,
-//             options: options.to_vec(),
-//             commands: commands.to_vec(),
-//             is_sub_menu,
-//         }
-// }
-
 #[derive(Clone, std::cmp::PartialEq)]
 pub enum Command {
     SetMenu(Menu),
