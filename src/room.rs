@@ -85,7 +85,8 @@ impl Room {
             ),
         };
 
-        let dash_bar: String = vec!['-'; self.width].iter().collect::<String>() + &String::from("\n");
+        let dash_bar: String =
+            vec!['-'; self.width].iter().collect::<String>() + &String::from("\n");
         //let empty: String = format!("|{:1$}|", " ", self.width - 2) + &String::from("\n");
         let title_bar: String = format!("{:^1$}", disp_title, self.width) + &String::from("\n");
         let title_cluster: String = String::new() + &dash_bar + &title_bar + &dash_bar;
