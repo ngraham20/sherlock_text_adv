@@ -2,6 +2,7 @@ use crate::menu;
 use crate::menu_state;
 use crate::room_state;
 use crate::user_input::*;
+use crate::map::Map;
 
 pub struct GameSettings {
     pub screen_width: usize,

@@ -1,28 +1,10 @@
 extern crate textwrap;
 use textwrap::Wrapper;
+use serde::{Serialize, Deserialize};
 
-pub struct Doors {
-    pub north: bool,
-    pub south: bool,
-    pub east: bool,
-    pub west: bool,
-    pub up: bool,
-    pub down: bool,
-}
 
-impl Doors {
-    pub fn new(north: bool, south: bool, east: bool, west: bool, up: bool, down: bool) -> Self {
-        Doors {
-            north,
-            south,
-            east,
-            west,
-            up,
-            down,
-        }
-    }
-}
 
+#[derive(Clone, Serialize, Deserialize)]
 pub struct Room {
     title: String,
     description_lit: String,
@@ -95,6 +77,7 @@ impl Room {
     }
 }
 
+#[derive(Clone, Serialize, Deserialize)]
 pub enum Lighting {
     BRIGHT,
     DIM,
