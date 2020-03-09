@@ -2,6 +2,22 @@ extern crate textwrap;
 use textwrap::Wrapper;
 use serde::{Serialize, Deserialize};
 
+#[derive(Clone, Serialize, Deserialize)]
+pub enum DoorState {
+    Open,
+    Locked,
+    Hidden,
+}
+
+#[derive(Clone, Serialize, Deserialize)]
+pub enum Door {
+    North(DoorState),
+    South(DoorState),
+    East(DoorState),
+    West(DoorState),
+    Up(DoorState),
+    Down(DoorState),
+}
 
 
 #[derive(Clone, Serialize, Deserialize)]
@@ -12,16 +28,31 @@ pub struct Room {
     description_dim: String,
     pub lighting: Lighting,
     screen_width: usize,
+    pub doors: Vec<Door>,
 }
 
 impl Room {
-    pub fn new(
+
+    pub fn new(screen_width: usize) -> Room {
+        Room {
+            title: String::from("Default Room"),
+            description_lit: String::from("You are in a brightly lit room."),
+            description_dim: String::from("You are in a dimly lit room."),
+            description_dark: String::from("It is too dark here to see anyting."),
+            lighting: Lighting::BRIGHT,
+            screen_width,
+            doors: vec![],
+        }
+    }
+
+    pub fn from(
         title: String,
         description_lit: String,
         description_dark: String,
         description_dim: String,
         lighting: Lighting,
         screen_width: usize,
+        doors: Vec<Door>,
     ) -> Self {
         let mut fdescription_lit: String = String::new();
         let wrapper = Wrapper::new(screen_width - 4);
@@ -51,6 +82,7 @@ impl Room {
             description_dim: fdescription_dark,
             lighting,
             screen_width,
+            doors,
         }
     }
 
